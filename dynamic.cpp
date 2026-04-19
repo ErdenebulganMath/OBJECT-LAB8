@@ -10,14 +10,14 @@ public:
 
 class Circle : public Shape {
 public :
-    void draw() {
+    void draw() override {
         cout << "Drawing Circle\n" ;
     }
 } ;
 
 class Rectangle : public Shape {
 public :
-    void draw() {
+    void draw() override {
         cout << "Drawing Rectangle\n" ;
     }
 } ;
