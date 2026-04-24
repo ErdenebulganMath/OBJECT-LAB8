@@ -1,23 +1,22 @@
 #include<bits/stdc++.h>
 #include<cmath>
-using namespace std; 
- 
+using namespace std;
+
 struct Point{
     float x;
     float y;
-} ;   
- 
-// Shape эх класс - байгуулагч нэмлээ
+} ;
+
 class Shape{
     protected :
-        static int counter ; 
+        static int counter ;
     public :
         Shape(){
             counter++ ;
         }
 
         virtual ~Shape(){
-            counter-- ; 
+            counter-- ;
         }
 
         static int getCounter(){
@@ -27,17 +26,14 @@ class Shape{
         static void setCounter(int c){
             counter = c ;
         }
+} ;
 
-} ; 
- 
 int Shape::counter = 0 ;
 
-// Shape2D эх класс - параметертэй байгуулагч нэмлээ
 class Shape2D : public Shape{
-    protected : 
+    protected :
         string name;
     public :
-        // Параметертэй байгуулагч - эх классын Shape() дуудна
         Shape2D(string name) : Shape() {
             this->name = name ;
         }
@@ -46,81 +42,73 @@ class Shape2D : public Shape{
         virtual float perimetr() = 0 ;
 
         string getName(){
-            return name ; 
+            return this->name ;
         }
 
         ~Shape2D() override {}
+} ;
 
-} ; 
- 
-// Circle
 class Circle : public Shape2D{
-    protected : 
-        Point p1 ; 
-        float radius ;  
+    protected :
+        Point p1 ;
+        float radius ;
     public :
-        // Shape2D-ийн параметертэй байгуулагчийг дуудаж байна
         Circle(Point p1 , float radius , string name) : Shape2D(name) {
-            this->p1 = p1 ; 
-            this->radius = radius ; 
+            this->p1 = p1 ;
+            this->radius = radius ;
         }
         float talbai() override {
-            return 3.14 * radius * radius ; 
+            return 3.14f * this->radius * this->radius ;
         }
         float perimetr() override {
-            return 2 * 3.14 * radius ; 
+            return 2 * 3.14f * this->radius ;
         }
         ~Circle() override {}
-} ; 
- 
-// Square
+} ;
+
 class Square : public Shape2D{
     protected :
-        Point p1 , p2 , p3 , p4 ; 
-        float tal ; 
+        Point p1 , p2 , p3 , p4 ;
+        float tal ;
     public :
-        // Shape2D-ийн параметертэй байгуулагчийг дуудаж байна
         Square(Point topLeft, float length, string name) : Shape2D(name) {
-            p1 = topLeft;
-            p2 = {topLeft.x + length, topLeft.y};
-            p3 = {topLeft.x + length, topLeft.y - length};
-            p4 = {topLeft.x, topLeft.y - length};
-            tal = length;
+            this->p1 = topLeft;
+            this->p2 = {topLeft.x + length, topLeft.y};
+            this->p3 = {topLeft.x + length, topLeft.y - length};
+            this->p4 = {topLeft.x, topLeft.y - length};
+            this->tal = length;
         }
         float talbai() override {
-            return tal * tal ; 
+            return this->tal * this->tal ;
         }
         float perimetr() override {
-            return 4 * tal ; 
+            return 4 * this->tal ;
         }
         ~Square() override {}
 };
- 
-// Triangle
+
 class Triangle : public Shape2D {
 protected:
     Point p1, p2, p3;
     float tal1, tal2, tal3;
 public:
-    // Shape2D-ийн параметертэй байгуулагчийг дуудаж байна
     Triangle(Point top, float a, string name) : Shape2D(name) {
-        p1 = top; 
+        this->p1 = top;
         float height = sqrt(3)/2 * a;
-        p2 = {top.x - a/2, top.y - height}; 
-        p3 = {top.x + a/2, top.y - height}; 
-    
-        tal1 = tal2 = tal3 = a;
+        this->p2 = {top.x - a/2, top.y - height};
+        this->p3 = {top.x + a/2, top.y - height};
+        this->tal1 = this->tal2 = this->tal3 = a;
     }
     float talbai() override {
-        return (sqrt(3)/4) * tal1 * tal1; 
+        return (sqrt(3.0f)/4) * this->tal1 * this->tal1;
     }
     float perimetr() override {
-        return tal1 + tal2 + tal3; 
+        return this->tal1 + this->tal2 + this->tal3;
     }
     ~Triangle() override {}
 };
- 
-void bubbleSort( Shape2D* shapes[] , int n){ 
+
+void sortByTalbai(Shape2D* shapes[], int n){
     for(int i = 0; i < n-1; i++) {
         for(int j = 0; j < n-i-1; j++) {
             if(shapes[j]->talbai() > shapes[j+1]->talbai()) {
@@ -131,41 +119,67 @@ void bubbleSort( Shape2D* shapes[] , int n){
         }
     }
 }
- 
+
+void sortByPerimetr(Shape2D* shapes[], int n){
+    for(int i = 0; i < n-1; i++) {
+        for(int j = 0; j < n-i-1; j++) {
+            if(shapes[j]->perimetr() > shapes[j+1]->perimetr()) {
+                Shape2D* temp = shapes[j];
+                shapes[j] = shapes[j+1];
+                shapes[j+1] = temp ;
+            }
+        }
+    }
+}
+
+void printShapes(Shape2D* shapes[], int n){
+    for(int i = 0; i < n; i++){
+        cout << i+1 << ". " << shapes[i]->getName() << endl;
+        cout << "   Talbai   : " << fixed << setprecision(2) << shapes[i]->talbai() << endl;
+        cout << "   Perimetr : " << fixed << setprecision(2) << shapes[i]->perimetr() << endl;
+        cout << "------------------" << endl;
+    }
+}
+
 int main() {
 
-// Олон объект үүсгэх (vector ашиглахгүй)
-int n = 6 ;
+    cout << "======================================" << endl;
+    cout << "Объект үүсгэхийн өмнөх тоо: " << Shape::getCounter() << endl;
+    cout << "======================================\n" << endl;
 
-// dynamic array үүсгэнэ
-Shape2D** shapes = new Shape2D*[n];
+    int n = 6 ;
+    Shape2D** shapes = new Shape2D*[n];
 
-shapes[0] = new Circle({0,0}, 5, "Circle1");
-shapes[1] = new Square({0,10}, 4, "Square1");
-shapes[2] = new Triangle({0,10}, 6, "Triangle1");
-shapes[3] = new Circle({1,1}, 3, "Circle2");
-shapes[4] = new Square({2,8}, 2, "Square2");
-shapes[5] = new Triangle({2,5}, 4, "Triangle2");
+    shapes[0] = new Circle({0,0}, 5, "Circle1");
+    shapes[1] = new Square({0,10}, 4, "Square1");
+    shapes[2] = new Triangle({0,10}, 6, "Triangle1");
+    shapes[3] = new Circle({1,1}, 3, "Circle2");
+    shapes[4] = new Square({2,8}, 2, "Square2");
+    shapes[5] = new Triangle({2,5}, 4, "Triangle2");
 
-bubbleSort(shapes, n) ;
+    cout << "Нийт үүссэн объектийн тоо (static counter): " << Shape::getCounter() << "\n" << endl;
 
-// ===== Хэвлэх =====
-cout << "=== Sorted by area ===\n\n";
+    // ===== Талбайгаар эрэмбэлж хэвлэх =====
+    sortByTalbai(shapes, n) ;
+    cout << "======================================" << endl;
+    cout << "=== Талбайгаар эрэмбэлсэн (өсөх дараалал) ===" << endl;
+    cout << "======================================" << endl;
+    printShapes(shapes, n);
 
-for(int i = 0; i < n; i++){
-    cout << shapes[i]->getName() << endl;
-    cout << "Talbai: " << shapes[i]->talbai() << endl;
-    cout << "Perimetr: " << shapes[i]->perimetr() << endl;
-    cout << "------------------" << endl;
-}
+    // ===== Периметрээр эрэмбэлж хэвлэх =====
+    sortByPerimetr(shapes, n) ;
+    cout << "\n======================================" << endl;
+    cout << "=== Периметрээр эрэмбэлсэн (өсөх дараалал) ===" << endl;
+    cout << "======================================" << endl;
+    printShapes(shapes, n);
 
+    // ===== Memory цэвэрлэх =====
+    for(int i = 0; i < n; i++){
+        delete shapes[i];
+    }
+    delete[] shapes;
 
-// ===== Memory цэвэрлэх =====
-for(int i = 0; i < n; i++){
-    delete shapes[i];
-}
+    cout << "\nОбъект устгасны дараах тоо (static counter): " << Shape::getCounter() << endl;
 
-delete[] shapes;
-
-
+    return 0;
 }
