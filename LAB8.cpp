@@ -144,7 +144,7 @@ void printShapes(Shape2D* shapes[], int n){
 int main() {
 
     cout << "======================================" << endl;
-    cout << "Объект үүсгэхийн өмнөх тоо: " << Shape::getCounter() << endl;
+    cout << "Object uuseegui uyd : " << Shape::getCounter() << endl;
     cout << "======================================\n" << endl;
 
     int n = 6 ;
@@ -157,19 +157,19 @@ int main() {
     shapes[4] = new Square({2,8}, 2, "Square2");
     shapes[5] = new Triangle({2,5}, 4, "Triangle2");
 
-    cout << "Нийт үүссэн объектийн тоо (static counter): " << Shape::getCounter() << "\n" << endl;
+    cout << "Uussen niit objectiin too (static counter): " << Shape::getCounter() << "\n" << endl;
 
     // ===== Талбайгаар эрэмбэлж хэвлэх =====
     sortByTalbai(shapes, n) ;
     cout << "======================================" << endl;
-    cout << "=== Талбайгаар эрэмбэлсэн (өсөх дараалал) ===" << endl;
+    cout << "=== Talbaigaar erembelsen ===" << endl;
     cout << "======================================" << endl;
     printShapes(shapes, n);
 
     // ===== Периметрээр эрэмбэлж хэвлэх =====
     sortByPerimetr(shapes, n) ;
     cout << "\n======================================" << endl;
-    cout << "=== Периметрээр эрэмбэлсэн (өсөх дараалал) ===" << endl;
+    cout << "=== Perimetreer erembelsen ===" << endl;
     cout << "======================================" << endl;
     printShapes(shapes, n);
 
@@ -179,7 +179,7 @@ int main() {
     }
     delete[] shapes;
 
-    cout << "\nОбъект устгасны дараах тоо (static counter): " << Shape::getCounter() << endl;
+    cout << "\nObject ustgasnii daraah static huvisagch (static counter): " << Shape::getCounter() << endl;
 
     return 0;
 }
